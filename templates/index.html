@@ -10,14 +10,14 @@
                 <span class="eyebrow">IU student community</span>
                 <h1>Buy, gift, and connect with confidence</h1>
                 <strong><p>Browse active listings, discover useful items, and join a trusted campus marketplace.</p></strong>
-        <div class="hero-actions">
-            {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
-                <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
-            {% else %}
-                <span class="welcome-text">Welcome Back </span>
-            {% endif %}
-        </div>
+                <div class="hero-actions">
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+                    {% else %}
+                        <span class="welcome-text">Welcome Back </span>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
@@ -28,16 +28,17 @@
                 <!--<span class="eyebrow">IU student community</span>-->
                 <h1>A platform that encourages a culture of gifting among students.</h1>
                 <strong><p>... and do not waste. Surely He does not like the wasteful. — Surah Al-An'am 6:141</p></strong>
-        <div class="hero-actions">
-            {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
-                <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
-            {% else %}
-                <span class="welcome-text">Welcome Back </span>
-            {% endif %}
-        </div>
+                <div class="hero-actions">
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+                    {% else %}
+                        <span class="welcome-text">Welcome Back </span>
+                    {% endif %}
+                </div>
             </div>
         </div>
+
         <div class="banner-slide">
             <img src="{{ url_for('static', filename='images/banner_hug.png') }}" alt="Students greeting warmly">
             <div class="banner-overlay"></div>
@@ -45,14 +46,14 @@
                 <span class="eyebrow">Simple and friendly</span>
                 <h1>Share more than items</h1>
                 <strong><p>"Give gifts and you will love one another." —Al-Adab Al-Mufrad, 594</p></strong>
-        <div class="hero-actions">
-            {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
-                <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
-            {% else %}
-                <span class="welcome-text">Welcome Back </span>
-            {% endif %}
-        </div>
+                <div class="hero-actions">
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+                    {% else %}
+                        <span class="welcome-text">Welcome Back </span>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -82,8 +83,8 @@
             <a href="{{ url_for('listing_detail', listing_id=listing.id) }}" class="listing-card-link">
                 <article class="listing-card listing-card-horizontal">
                     <div class="card-image-wrap horizontal-image-wrap">
-                        {% if listing.image_filename %}
-                            <img src="{{ url_for('static', filename='uploads/' ~ listing.image_filename) }}" alt="{{ listing.title }}" class="card-image">
+                        {% if listing.image_url %}
+                            <img src="{{ listing.image_url }}" alt="{{ listing.title }}" class="card-image">
                         {% else %}
                             <div class="image-placeholder">No Image</div>
                         {% endif %}

@@ -1,21 +1,18 @@
 import os
 from datetime import datetime, timedelta, timezone
 from functools import wraps
-from uuid import uuid4
 
+import cloudinary
+import cloudinary.uploader
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 
 load_dotenv()
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-INSTANCE_DIR = os.path.join(BASE_DIR, 'instance')
-UPLOAD_FOLDER = '/tmp'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 LISTING_DURATION_DAYS = int(os.environ.get('LISTING_DURATION_DAYS', '7'))
 MAX_UPLOAD_MB = int(os.environ.get('MAX_UPLOAD_MB', '5'))
@@ -27,11 +24,24 @@ if not DATABASE_URL:
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
+CLOUDINARY_CLOUD_NAME = os.environ.get("CLOUDINARY_CLOUD_NAME")
+CLOUDINARY_API_KEY = os.environ.get("CLOUDINARY_API_KEY")
+CLOUDINARY_API_SECRET = os.environ.get("CLOUDINARY_API_SECRET")
+
+if not all([CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET]):
+    raise RuntimeError("Cloudinary environment variables are missing.")
+
+cloudinary.config(
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET,
+    secure=True
+)
+
 app = Flask(__name__, instance_relative_config=True)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'change-this-secret-key-before-production')
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_MB * 1024 * 1024
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
@@ -41,9 +51,6 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
         "connect_timeout": 10,
     }
 }
-
-#os.makedirs(INSTANCE_DIR, exist_ok=True)
-#os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -91,7 +98,7 @@ class Listing(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    image_filename = db.Column(db.String(255), nullable=True)
+    image_url = db.Column(db.Text, nullable=True)
     price = db.Column(db.Float, nullable=True)
     listing_type = db.Column(db.String(10), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
@@ -162,13 +169,20 @@ def allowed_file(filename: str) -> bool:
 def save_image(file_storage):
     if not file_storage or file_storage.filename == '':
         return None
+
     if not allowed_file(file_storage.filename):
         return None
-    filename = secure_filename(file_storage.filename)
-    unique_name = f"{uuid4().hex}_{filename}"
-    path = os.path.join(app.config['UPLOAD_FOLDER'], unique_name)
-    file_storage.save(path)
-    return unique_name
+
+    try:
+        result = cloudinary.uploader.upload(
+            file_storage,
+            folder="iu_marketplace",
+            resource_type="image"
+        )
+        return result.get("secure_url")
+    except Exception as e:
+        print("Cloudinary upload error:", e)
+        return None
 
 
 def normalize_whatsapp(number: str) -> str:
@@ -193,6 +207,7 @@ def before_request():
         sync_listing_expiry()
     except Exception:
         pass
+
     if current_user.is_authenticated and (
         current_user.is_blocked or current_user.is_deleted or current_user.is_hidden
     ):
@@ -333,7 +348,15 @@ def create_listing():
                 flash('Price must be a valid number.', 'warning')
                 return redirect(url_for('create_listing'))
 
-        image_filename = save_image(image)
+        if image and image.filename and not allowed_file(image.filename):
+            flash('Please upload a valid image file (png, jpg, jpeg, gif, webp).', 'warning')
+            return redirect(url_for('create_listing'))
+
+        image_url = save_image(image)
+        if image and image.filename and not image_url:
+            flash('Image upload failed. Please try again.', 'danger')
+            return redirect(url_for('create_listing'))
+
         expires_at = datetime.now(timezone.utc) + timedelta(days=LISTING_DURATION_DAYS)
         listing = Listing(
             user_id=current_user.id,
@@ -341,7 +364,7 @@ def create_listing():
             description=description,
             listing_type=listing_type,
             price=price,
-            image_filename=image_filename,
+            image_url=image_url,
             expires_at=expires_at,
             is_hidden=False,
             is_deleted=False,
@@ -425,9 +448,17 @@ def edit_listing(listing_id):
             listing.price = None
 
         image = request.files.get('image')
+        if image and image.filename and not allowed_file(image.filename):
+            flash('Please upload a valid image file (png, jpg, jpeg, gif, webp).', 'warning')
+            return redirect(url_for('edit_listing', listing_id=listing.id))
+
         new_image = save_image(image)
+        if image and image.filename and not new_image:
+            flash('Image upload failed. Please try again.', 'danger')
+            return redirect(url_for('edit_listing', listing_id=listing.id))
+
         if new_image:
-            listing.image_filename = new_image
+            listing.image_url = new_image
 
         db.session.commit()
         flash('Listing updated.', 'success')

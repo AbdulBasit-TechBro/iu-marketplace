@@ -4,8 +4,8 @@
 <section class="detail-layout">
     <article class="card detail-card {% if not can_view_full %}preview-mode{% endif %}">
         <div class="detail-image-block">
-            {% if listing.image_filename %}
-                <img src="{{ url_for('static', filename='uploads/' ~ listing.image_filename) }}" alt="{{ listing.title }}" class="detail-image">
+            {% if listing.image_url %}
+                <img src="{{ listing.image_url }}" alt="{{ listing.title }}" class="detail-image">
             {% else %}
                 <div class="image-placeholder large">No Image</div>
             {% endif %}
