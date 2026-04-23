@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Edit Listing{% endblock %}
+{% block content %}
+<section class="form-card card medium">
+    <h1>Edit Listing</h1>
+    <form method="post" enctype="multipart/form-data" class="form-grid">
+        <label>Item Title
+            <input type="text" name="title" value="{{ listing.title }}" required>
+        </label>
+        <label>Listing Type
+            <select name="listing_type" required>
+                <option value="buy" {% if listing.listing_type == 'buy' %}selected{% endif %}>Buy</option>
+                <option value="gift" {% if listing.listing_type == 'gift' %}selected{% endif %}>Gift</option>
+            </select>
+        </label>
+        <label>Price (for Buy items)
+            <input type="number" step="0.01" min="0" name="price" value="{{ listing.price if listing.price is not none else '' }}">
+        </label>
+        <label>Replace Image
+            <input type="file" name="image" accept="image/*">
+        </label>
+        <label class="span-2">Description
+            <textarea name="description" rows="6" required>{{ listing.description }}</textarea>
+        </label>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</section>
+{% endblock %}

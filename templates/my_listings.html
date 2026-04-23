@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}My Listings{% endblock %}
+{% block content %}
+<section class="section-head">
+    <h1>My Listings</h1>
+</section>
+<div class="stack-list">
+    {% for listing in listings %}
+        <article class="card manage-card">
+            <div>
+                <h3>{{ listing.title }}</h3>
+                <p>{{ listing.description[:140] }}{% if listing.description|length > 140 %}...{% endif %}</p>
+                <div class="meta-row">
+                    <span class="badge {% if listing.listing_type == 'gift' %}badge-gift{% else %}badge-buy{% endif %}">{{ listing.status_label }}</span>
+                    <span>{% if listing.is_active %}Active{% else %}Expired{% endif %}</span>
+                    <span>Expires: {{ listing.expires_at.strftime('%Y-%m-%d') }}</span>
+                </div>
+            </div>
+            <div class="action-row wrap">
+                <a class="btn btn-outline" href="{{ url_for('listing_detail', listing_id=listing.id) }}">View</a>
+                <a class="btn btn-outline" href="{{ url_for('edit_listing', listing_id=listing.id) }}">Edit</a>
+                {% if not listing.is_active %}
+                <form method="post" action="{{ url_for('renew_listing', listing_id=listing.id) }}">
+                    <button class="btn btn-primary" type="submit">Renew</button>
+                </form>
+                {% endif %}
+                <form method="post" action="{{ url_for('delete_listing', listing_id=listing.id) }}" onsubmit="return confirm('Delete this listing?');">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </form>
+            </div>
+        </article>
+    {% else %}
+        <div class="card"><p>You have not created any listings yet.</p></div>
+    {% endfor %}
+</div>
+{% endblock %}

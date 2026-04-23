@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-visual card">
+        <div class="mini-slider" id="authSlider">
+            <div class="mini-slide active"><img src="{{ url_for('static', filename='images/banner_handshake.png') }}" alt="Handshake banner"></div>
+            <div class="mini-slide"><img src="{{ url_for('static', filename='images/banner_hug.png') }}" alt="Hug banner"></div>
+        </div>
+        <div class="auth-copy">
+            <h2>Welcome back</h2>
+            <p>Login to view full item details, contact sellers, comment, and rate members.</p>
+        </div>
+    </div>
+
+    <section class="form-card card narrow auth-form">
+        <h1>Login</h1>
+        <form method="post" class="form-grid single-column">
+            <label>Email
+                <input type="email" name="email" required>
+            </label>
+            <label>Password
+                <input type="password" name="password" required>
+            </label>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <p class="auth-note">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+    </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+  const slides = document.querySelectorAll('.mini-slide');
+  let current = 0;
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 4200);
+})();
+</script>
+{% endblock %}

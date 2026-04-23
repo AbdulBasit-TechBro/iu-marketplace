@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Create Listing{% endblock %}
+{% block content %}
+<section class="form-card card medium">
+    <h1>Post a New Listing</h1>
+    <form method="post" enctype="multipart/form-data" class="form-grid">
+        <label>Item Title
+            <input type="text" name="title" required>
+        </label>
+
+        <label>Listing Type
+            <select name="listing_type" required>
+                <option value="buy">Sell</option>
+                <option value="gift">Gift</option>
+            </select>
+        </label>
+
+        <label>Price (for Sell items)
+            <input type="number" step="0.01" min="0" name="price">
+        </label>
+
+        <label>Item Image
+            <input type="file" name="image" accept="image/*">
+        </label>
+
+        <label class="span-2">Description
+            <textarea name="description" rows="6" required></textarea>
+        </label>
+
+        <button type="submit" class="btn btn-primary">Create Listing</button>
+    </form>
+</section>
+{% endblock %}

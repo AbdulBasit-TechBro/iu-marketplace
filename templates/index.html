@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}Home - IU Marketplace{% endblock %}
+{% block content %}
+<section class="hero-banner card">
+    <div class="banner-slider" id="homeSlider">
+        <div class="banner-slide active">
+            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="Students exchanging a gift">
+            <div class="banner-overlay"></div>
+            <div class="banner-copy delayed-show">
+                <span class="eyebrow">IU student community</span>
+                <h1>Buy, gift, and connect with confidence</h1>
+                <strong><p>Browse active listings, discover useful items, and join a trusted campus marketplace.</p></strong>
+        <div class="hero-actions">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+            {% else %}
+                <span class="welcome-text">Welcome Back </span>
+            {% endif %}
+        </div>
+            </div>
+        </div>
+
+        <div class="banner-slide">
+            <img src="{{ url_for('static', filename='images/banner_handshake.png') }}" alt="Students exchanging a gift">
+            <div class="banner-overlay"></div>
+            <div class="banner-copy delayed-show">
+                <!--<span class="eyebrow">IU student community</span>-->
+                <h1>A platform that encourages a culture of gifting among students.</h1>
+                <strong><p>... and do not waste. Surely He does not like the wasteful. — Surah Al-An'am 6:141</p></strong>
+        <div class="hero-actions">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+            {% else %}
+                <span class="welcome-text">Welcome Back </span>
+            {% endif %}
+        </div>
+            </div>
+        </div>
+        <div class="banner-slide">
+            <img src="{{ url_for('static', filename='images/banner_hug.png') }}" alt="Students greeting warmly">
+            <div class="banner-overlay"></div>
+            <div class="banner-copy delayed-show">
+                <span class="eyebrow">Simple and friendly</span>
+                <h1>Share more than items</h1>
+                <strong><p>"Give gifts and you will love one another." —Al-Adab Al-Mufrad, 594</p></strong>
+        <div class="hero-actions">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+            {% else %}
+                <span class="welcome-text">Welcome Back </span>
+            {% endif %}
+        </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card search-card colorful-panel">
+    <form method="get" class="filters">
+        <input type="text" name="q" placeholder="Search listings" value="{{ q }}">
+        <select name="type">
+            <option value="">All types</option>
+            <option value="buy" {% if listing_type == 'buy' %}selected{% endif %}>Buy</option>
+            <option value="gift" {% if listing_type == 'gift' %}selected{% endif %}>Gift</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</section>
+
+<section>
+<section>
+    <div class="section-head">
+        <h2>Browse Listings</h2>
+        <span>{{ listings|length }} item(s)</span>
+    </div>
+
+    <div class="listing-grid">
+        {% for listing in listings %}
+            <a href="{{ url_for('listing_detail', listing_id=listing.id) }}" class="listing-card-link">
+                <article class="listing-card listing-card-horizontal">
+                    <div class="card-image-wrap horizontal-image-wrap">
+                        {% if listing.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ listing.image_filename) }}" alt="{{ listing.title }}" class="card-image">
+                        {% else %}
+                            <div class="image-placeholder">No Image</div>
+                        {% endif %}
+                        <span class="badge {% if listing.listing_type == 'gift' %}badge-gift{% else %}badge-buy{% endif %}">
+                            {% if listing.listing_type == 'gift' %}Gift{% else %}Buy{% endif %}
+                        </span>
+                    </div>
+
+                    <div class="card-content horizontal-card-content">
+                        <div class="card-top">
+                            <h3>{{ listing.title }}</h3>
+                            <p>{{ listing.description[:135] }}{% if listing.description|length > 135 %}...{% endif %}</p>
+                        </div>
+
+                        <div class="meta-row">
+                            <span class="listing-price">
+                                {% if listing.listing_type == 'buy' %}
+                                    SAR {{ '%.2f'|format(listing.price or 0) }}
+                                {% else %}
+                                    Free
+                                {% endif %}
+                            </span>
+                            <span>⭐ {{ listing.seller.average_rating if listing.seller.average_rating else 'No rating' }}</span>
+                        </div>
+
+                        <div class="action-row wrap listing-actions">
+                            {% if listing.listing_type == 'gift' %}
+                                <span class="btn btn-gold action-pill">Gift</span>
+                            {% else %}
+                                <span class="btn btn-primary action-pill">Buy</span>
+                            {% endif %}
+                            <span class="btn btn-outline action-pill">View Item</span>
+                        </div>
+                    </div>
+                </article>
+            </a>
+        {% else %}
+            <div class="card empty-state">
+                <p>No listings found yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+  const slides = document.querySelectorAll('.banner-slide');
+  let current = 0;
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+  }
+  setInterval(() => {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  }, 5000);
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-visual card">
+        <div class="mini-slider static-image">
+            <div class="mini-slide active"><img src="{{ url_for('static', filename='images/banner_handshake.png') }}" alt="Register banner"></div>
+        </div>
+        <div class="auth-copy">
+            <h2>Join the marketplace</h2>
+            <p>Create an account to unlock full listing details, share items, and connect with other students.</p>
+        </div>
+    </div>
+
+    <section class="form-card card narrow auth-form">
+        <h1>Create Account</h1>
+        <form method="post" class="form-grid single-column">
+            <label>Full Name
+                <input type="text" name="full_name" required>
+            </label>
+            <label>Email
+                <input type="email" name="email" required>
+            </label>
+            <label>WhatsApp Number
+                <input type="text" name="whatsapp_number" required>
+            </label>
+            <label>Password
+                <input type="password" name="password" required>
+            </label>
+            <label>Confirm Password
+                <input type="password" name="confirm_password" required>
+            </label>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+        <p class="auth-note">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </section>
+</section>
+{% endblock %}
