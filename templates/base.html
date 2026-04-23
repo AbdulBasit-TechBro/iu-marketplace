@@ -31,6 +31,8 @@
                     <a href="{{ url_for('register') }}" class="nav-join">Join Now</a>
                 {% endif %}
             </nav>
+            <!-- Mobile menu button -->
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
         </div>
     </header>
 
@@ -104,5 +106,10 @@
     </footer>
 
     {% block scripts %}{% endblock %}
+    <script>
+    function toggleMenu() {
+        document.querySelector('.nav-links').classList.toggle('active');
+    }
+    </script>
 </body>
 </html>
