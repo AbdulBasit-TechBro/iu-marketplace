@@ -17,16 +17,30 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 INSTANCE_DIR = os.path.join(BASE_DIR, 'instance')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-DEFAULT_SQLITE_DB = 'sqlite:///' + os.path.join(INSTANCE_DIR, 'marketplace.db')
 LISTING_DURATION_DAYS = int(os.environ.get('LISTING_DURATION_DAYS', '7'))
 MAX_UPLOAD_MB = int(os.environ.get('MAX_UPLOAD_MB', '5'))
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is required for the cloud database.")
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 app = Flask(__name__, instance_relative_config=True)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'change-this-secret-key-before-production')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', DEFAULT_SQLITE_DB)
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_MB * 1024 * 1024
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+    "connect_args": {
+        "sslmode": "require",
+        "connect_timeout": 10,
+    }
+}
 
 os.makedirs(INSTANCE_DIR, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -38,6 +52,8 @@ login_manager.login_message_category = 'warning'
 
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -69,13 +85,15 @@ class User(UserMixin, db.Model):
 
 
 class Listing(db.Model):
+    __tablename__ = 'listing'
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
     image_filename = db.Column(db.String(255), nullable=True)
     price = db.Column(db.Float, nullable=True)
-    listing_type = db.Column(db.String(10), nullable=False)  # buy/gift
+    listing_type = db.Column(db.String(10), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     is_hidden = db.Column(db.Boolean, default=False)
     is_deleted = db.Column(db.Boolean, default=False)
@@ -95,9 +113,11 @@ class Listing(db.Model):
 
 
 class Comment(db.Model):
+    __tablename__ = 'comment'
+
     id = db.Column(db.Integer, primary_key=True)
     listing_id = db.Column(db.Integer, db.ForeignKey('listing.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
     is_hidden = db.Column(db.Boolean, default=False)
     is_deleted = db.Column(db.Boolean, default=False)
@@ -105,9 +125,11 @@ class Comment(db.Model):
 
 
 class Rating(db.Model):
+    __tablename__ = 'rating'
+
     id = db.Column(db.Integer, primary_key=True)
-    seller_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    reviewer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    seller_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    reviewer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     stars = db.Column(db.Integer, nullable=False)
     review_text = db.Column(db.Text, nullable=True)
     is_hidden = db.Column(db.Boolean, default=False)
@@ -167,7 +189,10 @@ def sync_listing_expiry():
 
 @app.before_request
 def before_request():
-    sync_listing_expiry()
+    try:
+        sync_listing_expiry()
+    except Exception:
+        pass
     if current_user.is_authenticated and (
         current_user.is_blocked or current_user.is_deleted or current_user.is_hidden
     ):
@@ -614,6 +639,4 @@ def init_db():
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
