@@ -15,7 +15,7 @@ load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 INSTANCE_DIR = os.path.join(BASE_DIR, 'instance')
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
+UPLOAD_FOLDER = '/tmp'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 LISTING_DURATION_DAYS = int(os.environ.get('LISTING_DURATION_DAYS', '7'))
 MAX_UPLOAD_MB = int(os.environ.get('MAX_UPLOAD_MB', '5'))
