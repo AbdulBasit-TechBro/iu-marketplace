@@ -42,8 +42,8 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     }
 }
 
-os.makedirs(INSTANCE_DIR, exist_ok=True)
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+#os.makedirs(INSTANCE_DIR, exist_ok=True)
+#os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
