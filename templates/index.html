@@ -1,81 +1,79 @@
 {% extends 'base.html' %}
-{% block title %}Home - IU Marketplace{% endblock %}
+{% block title %}{{ t('home') }} - {{ t('app_name') }}{% endblock %}
+
 {% block content %}
 <section class="hero-banner card">
     <div class="banner-slider" id="homeSlider">
         <div class="banner-slide active">
-            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="Students exchanging a gift">
+            <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="Marketplace banner">
             <div class="banner-overlay"></div>
             <div class="banner-copy delayed-show">
-                <span class="eyebrow">IU student community</span>
-                <h1>Buy, gift, and connect with confidence</h1>
-                <strong><p>Browse active listings, discover useful items, and join a trusted campus marketplace.</p></strong>
+                <span class="eyebrow"><i class="fa-solid fa-graduation-cap"></i> {{ t('student_community') }}</span>
+                <h1>{{ t('hero_title') }}</h1>
+                <p>{{ t('hero_subtitle') }}</p>
                 <div class="hero-actions">
                     {% if not current_user.is_authenticated %}
-                        <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
-                        <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-gold"><i class="fa-solid fa-user-plus"></i> {{ t('join_now') }}</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light"><i class="fa-solid fa-right-to-bracket"></i> {{ t('login') }}</a>
                     {% else %}
-                        <span class="welcome-text">Welcome Back </span>
+                        <a href="{{ url_for('create_listing') }}" class="btn btn-gold"><i class="fa-solid fa-circle-plus"></i> {{ t('post_listing') }}</a>
                     {% endif %}
                 </div>
             </div>
         </div>
 
         <div class="banner-slide">
-            <img src="{{ url_for('static', filename='images/banner_handshake.png') }}" alt="Students exchanging a gift">
+            <img src="{{ url_for('static', filename='images/banner_handshake.png') }}" alt="Students exchanging item">
             <div class="banner-overlay"></div>
             <div class="banner-copy delayed-show">
-                <!--<span class="eyebrow">IU student community</span>-->
-                <h1>A platform that encourages a culture of gifting among students.</h1>
-                <strong><p>... and do not waste. Surely He does not like the wasteful. — Surah Al-An'am 6:141</p></strong>
+                <span class="eyebrow"><i class="fa-solid fa-hand-holding-heart"></i> {{ t('gifting_culture') }}</span>
+                <h1>{{ t('hero_title_2') }}</h1>
+                <p>{{ t('hero_subtitle_2') }}</p>
                 <div class="hero-actions">
                     {% if not current_user.is_authenticated %}
-                        <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
-                        <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
-                    {% else %}
-                        <span class="welcome-text">Welcome Back </span>
+                        <a href="{{ url_for('register') }}" class="btn btn-gold"><i class="fa-solid fa-user-plus"></i> {{ t('join_now') }}</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light"><i class="fa-solid fa-right-to-bracket"></i> {{ t('login') }}</a>
                     {% endif %}
                 </div>
             </div>
         </div>
 
         <div class="banner-slide">
-            <img src="{{ url_for('static', filename='images/banner_hug.png') }}" alt="Students greeting warmly">
+            <img src="{{ url_for('static', filename='images/banner_hug.png') }}" alt="Students greeting">
             <div class="banner-overlay"></div>
             <div class="banner-copy delayed-show">
-                <span class="eyebrow">Simple and friendly</span>
-                <h1>Share more than items</h1>
-                <strong><p>"Give gifts and you will love one another." —Al-Adab Al-Mufrad, 594</p></strong>
-                <div class="hero-actions">
-                    {% if not current_user.is_authenticated %}
-                        <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
-                        <a href="{{ url_for('login') }}" class="btn btn-outline-light">Login</a>
-                    {% else %}
-                        <span class="welcome-text">Welcome Back </span>
-                    {% endif %}
-                </div>
+                <span class="eyebrow"><i class="fa-solid fa-people-group"></i> {{ t('simple_friendly') }}</span>
+                <h1>{{ t('hero_title_3') }}</h1>
+                <p>{{ t('hero_subtitle_3') }}</p>
             </div>
         </div>
     </div>
 </section>
 
-<section class="card search-card colorful-panel">
+<section class="search-panel">
     <form method="get" class="filters">
-        <input type="text" name="q" placeholder="Search listings" value="{{ q }}">
+        <div class="search-input-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="q" placeholder="{{ t('search_placeholder') }}" value="{{ q }}">
+        </div>
+
         <select name="type">
-            <option value="">All types</option>
-            <option value="buy" {% if listing_type == 'buy' %}selected{% endif %}>Buy</option>
-            <option value="gift" {% if listing_type == 'gift' %}selected{% endif %}>Gift</option>
+            <option value="">{{ t('all_types') }}</option>
+            <option value="buy" {% if listing_type == 'buy' %}selected{% endif %}>{{ t('buy') }}</option>
+            <option value="gift" {% if listing_type == 'gift' %}selected{% endif %}>{{ t('gift') }}</option>
         </select>
-        <button type="submit" class="btn btn-primary">Search</button>
+
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-search"></i> {{ t('search') }}</button>
     </form>
 </section>
 
 <section>
-<section>
     <div class="section-head">
-        <h2>Browse Listings</h2>
-        <span>{{ listings|length }} item(s)</span>
+        <div>
+            <span class="eyebrow light"><i class="fa-solid fa-store"></i> {{ t('marketplace') }}</span>
+            <h2>{{ t('browse_listings') }}</h2>
+        </div>
+        <span class="count-pill">{{ listings|length }} {{ t('items') }}</span>
     </div>
 
     <div class="listing-grid">
@@ -88,8 +86,13 @@
                         {% else %}
                             <div class="image-placeholder">No Image</div>
                         {% endif %}
+
                         <span class="badge {% if listing.listing_type == 'gift' %}badge-gift{% else %}badge-buy{% endif %}">
-                            {% if listing.listing_type == 'gift' %}Gift{% else %}Buy{% endif %}
+                            {% if listing.listing_type == 'gift' %}
+                                <i class="fa-solid fa-gift"></i> {{ t('gift') }}
+                            {% else %}
+                                <i class="fa-solid fa-cart-shopping"></i> {{ t('buy') }}
+                            {% endif %}
                         </span>
                     </div>
 
@@ -104,26 +107,22 @@
                                 {% if listing.listing_type == 'buy' %}
                                     SAR {{ '%.2f'|format(listing.price or 0) }}
                                 {% else %}
-                                    Free
+                                    {{ t('free') }}
                                 {% endif %}
                             </span>
-                            <span>⭐ {{ listing.seller.average_rating if listing.seller.average_rating else 'No rating' }}</span>
+                            <span><i class="fa-solid fa-star star-icon"></i> {{ listing.seller.average_rating if listing.seller.average_rating else t('no_rating') }}</span>
                         </div>
 
-                        <div class="action-row wrap listing-actions">
-                            {% if listing.listing_type == 'gift' %}
-                                <span class="btn btn-gold action-pill">Gift</span>
-                            {% else %}
-                                <span class="btn btn-primary action-pill">Buy</span>
-                            {% endif %}
-                            <span class="btn btn-outline action-pill">View Item</span>
+                        <div class="listing-actions">
+                            <span class="btn btn-primary action-pill"><i class="fa-solid fa-eye"></i> {{ t('view_item') }}</span>
                         </div>
                     </div>
                 </article>
             </a>
         {% else %}
             <div class="card empty-state">
-                <p>No listings found yet.</p>
+                <i class="fa-solid fa-box-open empty-icon"></i>
+                <p>{{ t('no_listings') }}</p>
             </div>
         {% endfor %}
     </div>
@@ -136,9 +135,7 @@
   const slides = document.querySelectorAll('.banner-slide');
   let current = 0;
   function showSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle('active', i === index);
-    });
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
   }
   setInterval(() => {
     current = (current + 1) % slides.length;

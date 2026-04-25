@@ -1,28 +1,41 @@
 {% extends 'base.html' %}
-{% block title %}Edit Listing{% endblock %}
+{% block title %}{{ t('edit_listing') }}{% endblock %}
+
 {% block content %}
-<section class="form-card card medium">
-    <h1>Edit Listing</h1>
+<section class="form-card card medium premium-form">
+    <div class="form-heading">
+        <span class="form-icon"><i class="fa-solid fa-pen-to-square"></i></span>
+        <div>
+            <h1>{{ t('edit_listing') }}</h1>
+            <p>{{ t('edit_listing_subtitle') }}</p>
+        </div>
+    </div>
+
     <form method="post" enctype="multipart/form-data" class="form-grid">
-        <label>Item Title
+        <label>{{ t('item_title') }}
             <input type="text" name="title" value="{{ listing.title }}" required>
         </label>
-        <label>Listing Type
+
+        <label>{{ t('listing_type') }}
             <select name="listing_type" required>
-                <option value="buy" {% if listing.listing_type == 'buy' %}selected{% endif %}>Buy</option>
-                <option value="gift" {% if listing.listing_type == 'gift' %}selected{% endif %}>Gift</option>
+                <option value="buy" {% if listing.listing_type == 'buy' %}selected{% endif %}>{{ t('buy') }}</option>
+                <option value="gift" {% if listing.listing_type == 'gift' %}selected{% endif %}>{{ t('gift') }}</option>
             </select>
         </label>
-        <label>Price (for Buy items)
+
+        <label>{{ t('price_buy') }}
             <input type="number" step="0.01" min="0" name="price" value="{{ listing.price if listing.price is not none else '' }}">
         </label>
-        <label>Replace Image
+
+        <label>{{ t('replace_image') }}
             <input type="file" name="image" accept="image/*">
         </label>
-        <label class="span-2">Description
+
+        <label class="span-2">{{ t('description') }}
             <textarea name="description" rows="6" required>{{ listing.description }}</textarea>
         </label>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> {{ t('save_changes') }}</button>
     </form>
 </section>
 {% endblock %}
