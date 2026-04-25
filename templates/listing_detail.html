@@ -50,6 +50,10 @@
                 </a>
             {% endif %}
         </div>
+    {% else %}
+        <p class="detail-description">
+            {{ listing.description[:160] }}{% if listing.description|length > 160 %}...{% endif %}
+        </p>
     {% endif %}
 </div>
     </article>
