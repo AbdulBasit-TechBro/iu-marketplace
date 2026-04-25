@@ -1,144 +1,79 @@
 {% extends 'base.html' %}
 {% block title %}{{ listing.title }}{% endblock %}
+
 {% block content %}
-<section class="detail-layout">
-    <article class="card detail-card {% if not can_view_full %}preview-mode{% endif %}">
-        <div class="detail-image-block">
+<section class="product-page">
+
+    <article class="product-card">
+
+        <div class="product-image-area">
             {% if listing.image_url %}
-                <img src="{{ listing.image_url }}" alt="{{ listing.title }}" class="detail-image">
+                <img src="{{ listing.image_url }}" alt="{{ listing.title }}" class="product-image">
             {% else %}
                 <div class="image-placeholder large">No Image</div>
             {% endif %}
         </div>
-        <div class="detail-content">
 
-    <!-- Title + Badge -->
-    <div class="detail-head">
-        <h1>{{ listing.title }}</h1>
-        <span class="badge {% if listing.listing_type == 'gift' %}badge-gift{% else %}badge-buy{% endif %}">
-            {{ listing.status_label }}
-        </span>
-    </div>
+        <div class="product-info-area">
 
-    <!-- Price Highlight -->
-    <div class="price-box">
-        {% if listing.listing_type == 'buy' %}
-            <h2 class="price">SAR {{ '%.2f'|format(listing.price or 0) }}</h2>
-        {% else %}
-            <h2 class="price free">Free</h2>
-        {% endif %}
-    </div>
+            <div class="product-title-row">
+                <h1>{{ listing.title }}</h1>
+                <span class="badge {% if listing.listing_type == 'gift' %}badge-gift{% else %}badge-buy{% endif %}">
+                    {{ listing.status_label }}
+                </span>
+            </div>
 
-    <!-- Description -->
-    {% if can_view_full %}
-        <p class="detail-description">{{ listing.description }}</p>
-    {% else %}
-        <p class="detail-description">
-            {{ listing.description[:160] }}{% if listing.description|length > 160 %}...{% endif %}
-        </p>
-    {% endif %}
+            <div class="product-price">
+                {% if listing.listing_type == 'buy' %}
+                    SAR {{ '%.2f'|format(listing.price or 0) }}
+                {% else %}
+                    Free
+                {% endif %}
+            </div>
 
-    {% if can_view_full %}
-    <!-- Seller Info Card -->
-    <div class="seller-card">
-        <p><strong>Seller/Gifter:</strong> {{ listing.seller.full_name }}</p>
-        <p><strong>Rating:</strong> ⭐ {{ listing.seller.average_rating if listing.seller.average_rating else 'No rating yet' }}</p>
-        <p><strong>Status:</strong> {% if listing.is_active %}Live{% else %}Expired{% endif %}</p>
-    </div>
+            {% if can_view_full %}
+                <p class="product-description">{{ listing.description }}</p>
 
-    <!-- Actions -->
-    <div class="action-row wrap">
-        <a class="btn btn-primary big-btn"
-           href="https://wa.me/{{ listing.seller.whatsapp_number }}"
-           target="_blank">
-            Contact Seller
-        </a>
+                <div class="seller-info-box">
+                    <p><strong>Seller/Gifter:</strong> {{ listing.seller.full_name }}</p>
+                    <p><strong>Seller Rating:</strong> ⭐ {{ listing.seller.average_rating if listing.seller.average_rating else 'No rating yet' }}</p>
+                    <p><strong>Status:</strong> {% if listing.is_active %}Live{% else %}Expired{% endif %}</p>
+                </div>
 
-        {% if current_user.is_authenticated and (current_user.id == listing.user_id or current_user.is_admin) %}
-            <a class="btn btn-outline"
-               href="{{ url_for('edit_listing', listing_id=listing.id) }}">
-                Edit Listing
-            </a>
-        {% endif %}
-    </div>
-    {% endif %}
+                <div class="product-actions">
+                    <a class="btn btn-primary" href="https://wa.me/{{ listing.seller.whatsapp_number }}" target="_blank" rel="noopener">
+                        Contact on WhatsApp
+                    </a>
 
-</div>
+                    {% if current_user.is_authenticated and (current_user.id == listing.user_id or current_user.is_admin) %}
+                        <a class="btn btn-outline" href="{{ url_for('edit_listing', listing_id=listing.id) }}">Edit Listing</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p class="product-description">
+                    {{ listing.description[:180] }}{% if listing.description|length > 180 %}...{% endif %}
+                </p>
+
+                <div class="unlock-box-clean">
+                    <h3>Register to unlock seller details</h3>
+                    <p>Login or create an account to view WhatsApp contact, ratings, comments, and full item details.</p>
+
+                    <div class="product-actions">
+                        <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
     </article>
 
-    <aside class="detail-side">
-        {% if can_view_full %}
-        <section class="card">
-            <h2>Rate Seller/Gifter</h2>
-            <form method="post" action="{{ url_for('rate_seller', seller_id=listing.user_id) }}" class="form-grid compact single-column">
-        <label>Stars
-            <label>Stars</label>
+    {% if can_view_full %}
+        <section class="product-extra-grid">
+            <!-- Keep your rating and comments sections here -->
+        </section>
+    {% endif %}
 
-                    <div class="star-rating">
-                        {% for i in range(5, 0, -1) %}
-                            <input type="radio"
-                                id="star{{ i }}"
-                                name="stars"
-                                value="{{ i }}"
-                                required
-                                {% if my_rating and my_rating.stars == i %}checked{% endif %}>
-                            <label for="star{{ i }}">★</label>
-                        {% endfor %}
-                    </div>
-                
-                <label>Review
-                    <textarea name="review_text" rows="3">{{ my_rating.review_text if my_rating else '' }}</textarea>
-                </label>
-                <button class="btn btn-primary" type="submit">Save Rating</button>
-            </form>
-            <div class="rating-list">
-                {% for rating in ratings[:5] %}
-                    <div class="rating-item">
-                        <strong>{{ rating.reviewer.full_name }}</strong>
-                        <span>⭐ {{ rating.stars }}</span>
-                        <p>{{ rating.review_text or 'No written review.' }}</p>
-                    </div>
-                {% else %}
-                    <p>No ratings yet.</p>
-                {% endfor %}
-            </div>
-        </section>
-
-        <section class="card">
-            <h2>Comments</h2>
-            <form method="post" action="{{ url_for('add_comment', listing_id=listing.id) }}" class="form-grid compact single-column">
-                <label>Your Comment
-                    <textarea name="content" rows="4" required></textarea>
-                </label>
-                <button class="btn btn-primary" type="submit">Post Comment</button>
-            </form>
-            <div class="comment-list">
-                {% for comment in comments %}
-                    <div class="comment-item">
-                        <strong>{{ comment.author.full_name }}</strong>
-                        <small>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
-                        <p>{{ comment.content }}</p>
-                    </div>
-                {% else %}
-                    <p>No comments yet.</p>
-                {% endfor %}
-            </div>
-        </section>
-        {% else %}
-        <section class="card colorful-panel">
-            <h2>Register to unlock more</h2>
-            <ul class="unlock-list">
-                <li>Full item description</li>
-                <li>Seller WhatsApp contact</li>
-                <li>Comments and ratings</li>
-                <li>Post your own listings</li>
-            </ul>
-            <div class="hero-actions">
-                <a href="{{ url_for('register') }}" class="btn btn-gold">Join Now</a>
-                <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
-            </div>
-        </section>
-        {% endif %}
-    </aside>
 </section>
 {% endblock %}
