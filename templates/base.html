@@ -51,7 +51,7 @@
     </main>
 
     <footer class="site-footer">
-        <div class="container footer-top">
+    <div class="container footer-top"><!-- Quick Links -->
 
             <!-- <div class="footer-brand">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="IU Marketplace Logo" class="footer-logo">
@@ -64,46 +64,45 @@
             <div class="footer-links">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('browse_listings') }}">Browse Listings</a></li>
-                    <li><a href="{{ url_for('register') }}">Join Now</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('index') }}">Browse Listings</a></li>
+                <li><a href="{{ url_for('register') }}">Join Now</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
                 </ul>
             </div>
-
-            <div class="footer-contact">
+                <!-- Social -->
+                <div class="footer-contact">
                 <h4>Social Media</h4>
-                <div class="footer-social-icons">
-                    <a href="https://wa.me/your-number" target="_blank" aria-label="WhatsApp">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                    <a href="https://instagram.com/your-handle" target="_blank" aria-label="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="https://x.com/your-handle" target="_blank" aria-label="X">
-                        <i class="fab fa-x-twitter"></i>
-                    </a>
-                    <a href="https://facebook.com/your-page" target="_blank" aria-label="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
+                <div class="footer-contact">
+                                <h4>Social Media</h4>
+                                <div class="footer-social-icons">
+                                    <a href="https://wa.me/your-number" target="_blank" aria-label="WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                    <a href="https://instagram.com/your-handle" target="_blank" aria-label="Instagram">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="https://x.com/your-handle" target="_blank" aria-label="X">
+                                        <i class="fab fa-x-twitter"></i>
+                                    </a>
+                                    <a href="https://facebook.com/your-page" target="_blank" aria-label="Facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                </div>
+                            </div>
                 </div>
-            </div>
-
-            <div class="footer-note">
+                <!-- Info -->
+                <div class="footer-note">
                 <h4>Marketplace Info</h4>
                 <p>Buy or gift items easily.</p>
                 <p>Contact sellers directly through WhatsApp.</p>
                 <p>Only active listings are shown.</p>
-            </div>
-
-        </div>
-
-        <div class="footer-bottom">
-            <div class="container">
-                <p>© 2026 IU Marketplace. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
+                </div>
+                </div>
+                <div class="footer-bottom">
+                <p>&copy; 2026 IU Marketplace. All Rights Reserved.</p>
+                </div>
+                </footer>
 
     {% block scripts %}{% endblock %}
     <script>
