@@ -1,30 +1,41 @@
 {% extends 'base.html' %}
-{% block title %}Login{% endblock %}
+{% block title %}{{ t('login') }}{% endblock %}
+
 {% block content %}
 <section class="auth-layout">
     <div class="auth-visual card">
         <div class="mini-slider" id="authSlider">
             <div class="mini-slide active"><img src="{{ url_for('static', filename='images/banner_handshake.png') }}" alt="Handshake banner"></div>
-            <div class="mini-slide"><img src="{{ url_for('static', filename='images/banner_hug.png') }}" alt="Hug banner"></div>
+            <div class="mini-slide"><img src="{{ url_for('static', filename='images/banner_hug.png') }}" alt="Community banner"></div>
         </div>
         <div class="auth-copy">
-            <h2>Welcome back</h2>
-            <p>Login to view full item details, contact sellers, comment, and rate members.</p>
+            <h2>{{ t('welcome_back') }}</h2>
+            <p>{{ t('login_subtitle') }}</p>
         </div>
     </div>
 
-    <section class="form-card card narrow auth-form">
-        <h1>Login</h1>
+    <section class="form-card card narrow auth-form premium-form">
+        <div class="form-heading compact-heading">
+            <span class="form-icon"><i class="fa-solid fa-right-to-bracket"></i></span>
+            <div>
+                <h1>{{ t('login') }}</h1>
+                <p>{{ t('login_form_text') }}</p>
+            </div>
+        </div>
+
         <form method="post" class="form-grid single-column">
-            <label>Email
+            <label>{{ t('email') }}
                 <input type="email" name="email" required>
             </label>
-            <label>Password
+
+            <label>{{ t('password') }}
                 <input type="password" name="password" required>
             </label>
-            <button type="submit" class="btn btn-primary">Login</button>
+
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-right-to-bracket"></i> {{ t('login') }}</button>
         </form>
-        <p class="auth-note">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+
+        <p class="auth-note">{{ t('new_here') }} <a href="{{ url_for('register') }}">{{ t('create_account') }}</a></p>
     </section>
 </section>
 {% endblock %}

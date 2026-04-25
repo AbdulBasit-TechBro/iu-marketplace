@@ -1,36 +1,51 @@
 {% extends 'base.html' %}
-{% block title %}My Listings{% endblock %}
+{% block title %}{{ t('my_listings') }}{% endblock %}
+
 {% block content %}
 <section class="section-head">
-    <h1>My Listings</h1>
+    <div>
+        <span class="eyebrow light"><i class="fa-solid fa-rectangle-list"></i> {{ t('dashboard') }}</span>
+        <h1>{{ t('my_listings') }}</h1>
+    </div>
+    <a href="{{ url_for('create_listing') }}" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> {{ t('post_listing') }}</a>
 </section>
+
 <div class="stack-list">
     {% for listing in listings %}
         <article class="card manage-card">
-            <div>
+            <div class="manage-main">
                 <h3>{{ listing.title }}</h3>
                 <p>{{ listing.description[:140] }}{% if listing.description|length > 140 %}...{% endif %}</p>
-                <div class="meta-row">
-                    <span class="badge {% if listing.listing_type == 'gift' %}badge-gift{% else %}badge-buy{% endif %}">{{ listing.status_label }}</span>
-                    <span>{% if listing.is_active %}Active{% else %}Expired{% endif %}</span>
-                    <span>Expires: {{ listing.expires_at.strftime('%Y-%m-%d') }}</span>
+                <div class="meta-row wrap">
+                    <span class="badge {% if listing.listing_type == 'gift' %}badge-gift{% else %}badge-buy{% endif %}">
+                        {% if listing.listing_type == 'gift' %}<i class="fa-solid fa-gift"></i>{% else %}<i class="fa-solid fa-cart-shopping"></i>{% endif %}
+                        {{ listing.status_label }}
+                    </span>
+                    <span>{% if listing.is_active %}<i class="fa-solid fa-circle-check"></i> {{ t('active') }}{% else %}<i class="fa-solid fa-clock"></i> {{ t('expired') }}{% endif %}</span>
+                    <span><i class="fa-solid fa-calendar-days"></i> {{ t('expires') }}: {{ listing.expires_at.strftime('%Y-%m-%d') }}</span>
                 </div>
             </div>
+
             <div class="action-row wrap">
-                <a class="btn btn-outline" href="{{ url_for('listing_detail', listing_id=listing.id) }}">View</a>
-                <a class="btn btn-outline" href="{{ url_for('edit_listing', listing_id=listing.id) }}">Edit</a>
+                <a class="btn btn-outline" href="{{ url_for('listing_detail', listing_id=listing.id) }}"><i class="fa-solid fa-eye"></i> {{ t('view') }}</a>
+                <a class="btn btn-outline" href="{{ url_for('edit_listing', listing_id=listing.id) }}"><i class="fa-solid fa-pen"></i> {{ t('edit') }}</a>
+
                 {% if not listing.is_active %}
                 <form method="post" action="{{ url_for('renew_listing', listing_id=listing.id) }}">
-                    <button class="btn btn-primary" type="submit">Renew</button>
+                    <button class="btn btn-primary" type="submit"><i class="fa-solid fa-rotate-right"></i> {{ t('renew') }}</button>
                 </form>
                 {% endif %}
-                <form method="post" action="{{ url_for('delete_listing', listing_id=listing.id) }}" onsubmit="return confirm('Delete this listing?');">
-                    <button class="btn btn-danger" type="submit">Delete</button>
+
+                <form method="post" action="{{ url_for('delete_listing', listing_id=listing.id) }}" onsubmit="return confirm('{{ t('delete_listing_confirm') }}');">
+                    <button class="btn btn-danger" type="submit"><i class="fa-solid fa-trash"></i> {{ t('delete') }}</button>
                 </form>
             </div>
         </article>
     {% else %}
-        <div class="card"><p>You have not created any listings yet.</p></div>
+        <div class="card empty-state">
+            <i class="fa-solid fa-box-open empty-icon"></i>
+            <p>{{ t('no_my_listings') }}</p>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}

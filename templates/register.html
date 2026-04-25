@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Register{% endblock %}
+{% block title %}{{ t('register') }}{% endblock %}
+
 {% block content %}
 <section class="auth-layout">
     <div class="auth-visual card">
@@ -7,32 +8,45 @@
             <div class="mini-slide active"><img src="{{ url_for('static', filename='images/banner_handshake.png') }}" alt="Register banner"></div>
         </div>
         <div class="auth-copy">
-            <h2>Join the marketplace</h2>
-            <p>Create an account to unlock full listing details, share items, and connect with other students.</p>
+            <h2>{{ t('join_marketplace') }}</h2>
+            <p>{{ t('register_subtitle') }}</p>
         </div>
     </div>
 
-    <section class="form-card card narrow auth-form">
-        <h1>Create Account</h1>
+    <section class="form-card card narrow auth-form premium-form">
+        <div class="form-heading compact-heading">
+            <span class="form-icon"><i class="fa-solid fa-user-plus"></i></span>
+            <div>
+                <h1>{{ t('create_account') }}</h1>
+                <p>{{ t('register_form_text') }}</p>
+            </div>
+        </div>
+
         <form method="post" class="form-grid single-column">
-            <label>Full Name
+            <label>{{ t('full_name') }}
                 <input type="text" name="full_name" required>
             </label>
-            <label>Email
+
+            <label>{{ t('email') }}
                 <input type="email" name="email" required>
             </label>
-            <label>WhatsApp Number
+
+            <label>{{ t('whatsapp_number') }}
                 <input type="text" name="whatsapp_number" required>
             </label>
-            <label>Password
+
+            <label>{{ t('password') }}
                 <input type="password" name="password" required>
             </label>
-            <label>Confirm Password
+
+            <label>{{ t('confirm_password') }}
                 <input type="password" name="confirm_password" required>
             </label>
-            <button type="submit" class="btn btn-primary">Register</button>
+
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-user-check"></i> {{ t('register') }}</button>
         </form>
-        <p class="auth-note">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+
+        <p class="auth-note">{{ t('already_have_account') }} <a href="{{ url_for('login') }}">{{ t('login') }}</a></p>
     </section>
 </section>
 {% endblock %}

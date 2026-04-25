@@ -1,113 +1,139 @@
+{% set current_lang = session.get('lang', 'en') %}
 <!doctype html>
-<html lang="en">
+<html lang="{{ current_lang }}" dir="{{ 'rtl' if current_lang == 'ar' else 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}IU Marketplace{% endblock %}</title>
+    <title>{% block title %}{{ t('app_name') }}{% endblock %}</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {% if current_lang == 'ar' %}
+        <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    {% endif %}
 </head>
+
 <body>
-    <header class="site-header">
-        <div class="container nav-wrap">
-            <a href="{{ url_for('index') }}" class="brand">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="IU Marketplace logo" class="brand-logo">
-                <span>IU Marketplace</span>
+<header class="site-header">
+    <div class="container nav-wrap">
+        <a href="{{ url_for('index') }}" class="brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="IU Marketplace logo" class="brand-logo">
+            <span>{{ t('app_name') }}</span>
+        </a>
+
+        <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-links">
+            <a href="{{ url_for('index') }}">
+                <i class="fa-solid fa-house"></i>
+                {{ t('home') }}
             </a>
 
-            <nav class="nav-links">
-                <a href="{{ url_for('index') }}">Home</a>
-                <!--<a href="{{ url_for('browse_listings') }}">Browse Listings</a>-->
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('create_listing') }}">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    {{ t('post') }}
+                </a>
 
-                {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('create_listing') }}">Post Listing</a>
-                    <a href="{{ url_for('my_listings') }}">My Listings</a>
-                    {% if current_user.is_admin %}
-                        <a href="{{ url_for('admin_dashboard') }}">Admin</a>
-                    {% endif %}
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                {% else %}
-                    <a href="{{ url_for('login') }}">Login</a>
-                    <a href="{{ url_for('register') }}" class="nav-join">Join Now</a>
+                <a href="{{ url_for('my_listings') }}">
+                    <i class="fa-solid fa-rectangle-list"></i>
+                    {{ t('my_listings') }}
+                </a>
+
+                {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        {{ t('admin') }}
+                    </a>
                 {% endif %}
-            </nav>
-            <!-- Mobile menu button -->
-        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-        </div>
-    </header>
 
-    <main class="container page-body">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-stack">
-                    {% for category, message in messages %}
-                        <div class="flash flash-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
+                <a href="{{ url_for('logout') }}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    {{ t('logout') }}
+                </a>
+            {% else %}
+                <a href="{{ url_for('login') }}">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    {{ t('login') }}
+                </a>
+
+                <a href="{{ url_for('register') }}" class="nav-join">
+                    <i class="fa-solid fa-user-plus"></i>
+                    {{ t('join_now') }}
+                </a>
             {% endif %}
-        {% endwith %}
 
-        {% block content %}{% endblock %}
-    </main>
+            <a href="{{ url_for('set_language', lang='ar' if current_lang == 'en' else 'en') }}" class="language-pill">
+                <i class="fa-solid fa-language"></i>
+                {{ 'AR' if current_lang == 'en' else 'EN' }}
+            </a>
+        </nav>
+    </div>
+</header>
 
-    <footer class="site-footer">
-    <div class="container footer-top"><!-- Quick Links -->
-
-            <!-- <div class="footer-brand">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="IU Marketplace Logo" class="footer-logo">
-                <h3>IU Marketplace</h3>
-                <p>
-                    A simple and trusted student marketplace for buying, gifting, and sharing useful items within the IU community.
-                </p>
-            </div> -->
-
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <ul>
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('index') }}">Browse Listings</a></li>
-                <li><a href="{{ url_for('register') }}">Join Now</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-                </ul>
+<main class="container page-body">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-stack">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
             </div>
-                <!-- Social -->
-                
-                <div class="footer-contact">
-                                <h4>Social Media</h4>
-                                <div class="footer-social-icons">
-                                    <a href="https://wa.me/your-number" target="_blank" aria-label="WhatsApp">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </a>
-                                    <a href="https://instagram.com/your-handle" target="_blank" aria-label="Instagram">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                    <a href="https://x.com/your-handle" target="_blank" aria-label="X">
-                                        <i class="fab fa-x-twitter"></i>
-                                    </a>
-                                    <a href="https://facebook.com/your-page" target="_blank" aria-label="Facebook">
-                                        <i class="fab fa-facebook-f"></i>
-                                    </a>
-                                </div>
-                            </div>
-                
-                <!-- Info -->
-                <div class="footer-note">
-                <h4>Marketplace Info</h4>
-                <p>Buy or gift items easily.</p>
-                <p>Contact sellers directly through WhatsApp.</p>
-                <p>Only active listings are shown.</p>
-                </div>
-                </div>
-                <div class="footer-bottom">
-                <p>&copy; 2026 IU Marketplace. All Rights Reserved.</p>
-                </div>
-                </footer>
+        {% endif %}
+    {% endwith %}
 
-    {% block scripts %}{% endblock %}
-    <script>
-    function toggleMenu() {
-        document.querySelector('.nav-links').classList.toggle('active');
-    }
-    </script>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-top">
+        <div class="footer-links">
+            <h4>{{ t('quick_links') }}</h4>
+            <ul>
+                <li><a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> {{ t('home') }}</a></li>
+                <li><a href="{{ url_for('index') }}"><i class="fa-solid fa-store"></i> {{ t('browse_listings') }}</a></li>
+                {% if not current_user.is_authenticated %}
+                    <li><a href="{{ url_for('register') }}"><i class="fa-solid fa-user-plus"></i> {{ t('join_now') }}</a></li>
+                    <li><a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> {{ t('login') }}</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('create_listing') }}"><i class="fa-solid fa-circle-plus"></i> {{ t('post_listing') }}</a></li>
+                    <li><a href="{{ url_for('my_listings') }}"><i class="fa-solid fa-rectangle-list"></i> {{ t('my_listings') }}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="footer-contact">
+            <h4>{{ t('social_media') }}</h4>
+            <div class="footer-social-icons">
+                <a href="https://wa.me/your-number" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://instagram.com/your-handle" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/your-handle" target="_blank" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://facebook.com/your-page" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <h4>{{ t('marketplace_info') }}</h4>
+            <p><i class="fa-solid fa-bag-shopping"></i> {{ t('footer_buy_gift') }}</p>
+            <p><i class="fa-brands fa-whatsapp"></i> {{ t('footer_whatsapp') }}</p>
+            <p><i class="fa-solid fa-circle-check"></i> {{ t('footer_active') }}</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 {{ t('app_name') }}. {{ t('rights') }}</p>
+    </div>
+</footer>
+
+{% block scripts %}{% endblock %}
+
+<script>
+function toggleMenu() {
+    document.querySelector('.nav-links').classList.toggle('active');
+}
+</script>
 </body>
 </html>
