@@ -30,7 +30,7 @@
                         <a class="btn btn-outline" href="{{ url_for('edit_listing', listing_id=listing.id) }}">Edit Listing</a>
                     {% endif %}
                 </div>
-            {% else %}
+            <!-- {% else %}
                 <p class="detail-description">{{ listing.description[:160] }}{% if listing.description|length > 160 %}...{% endif %}</p>
                 <div class="locked-box">
                     <h3>Full item details are for registered users</h3>
@@ -40,7 +40,7 @@
                         <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
                     </div>
                 </div>
-            {% endif %}
+            {% endif %} -->
         </div>
     </article>
 

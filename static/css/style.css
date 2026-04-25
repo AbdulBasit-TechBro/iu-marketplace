@@ -509,20 +509,23 @@ textarea {
 
 .badge {
     display: inline-block;
-    padding: .35rem .7rem;
+    padding: .4rem .85rem;
     border-radius: 999px;
-    font-size: .9rem;
+    font-size: .85rem;
     font-weight: 700;
+    letter-spacing: 0.4px;
+    color: #fff;
 }
 
+/* BUY - strong professional blue */
 .badge-buy {
-    background: rgba(15,95,151,.15);
-    color: var(--primary);
+    background: #0f5f97;
 }
 
+/* GIFT - warm gold */
 .badge-gift {
-    background: rgba(212,163,43,.24);
-    color: #7a5a11;
+    background: #d4a32b;
+    color: #3a2a05; /* darker text for readability */
 }
 
 .card-image-wrap .badge {
