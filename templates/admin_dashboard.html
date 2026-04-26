@@ -2,109 +2,228 @@
 {% block title %}{{ t('admin_dashboard') }}{% endblock %}
 
 {% block content %}
-<section class="section-head">
-    <div>
-        <span class="eyebrow light"><i class="fa-solid fa-shield-halved"></i> {{ t('admin') }}</span>
-        <h1>{{ t('admin_dashboard') }}</h1>
-    </div>
-    <span class="count-pill">{{ t('manage_users_items_comments') }}</span>
-</section>
+<main class="dashboard-page">
 
-<section class="admin-summary-grid">
-    <div class="card stat-card"><i class="fa-solid fa-users"></i><span>{{ t('users') }}</span><strong>{{ users|length }}</strong></div>
-    <div class="card stat-card"><i class="fa-solid fa-box"></i><span>{{ t('listings') }}</span><strong>{{ listings|length }}</strong></div>
-    <div class="card stat-card"><i class="fa-solid fa-comments"></i><span>{{ t('comments') }}</span><strong>{{ comments|length }}</strong></div>
-</section>
+    
+                <div>
+                    <h1>{{ t('admin_dashboard') }}</h1>
+                    <p class="dashboard-subtitle">{{ t('manage_users_items_comments') }}</p>
+                </div>
+            </section>
 
-<section class="card admin-section">
-    <h2><i class="fa-solid fa-users"></i> {{ t('users') }}</h2>
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{ t('name') }}</th>
-                    <th>{{ t('email') }}</th>
-                    <th>{{ t('status') }}</th>
-                    <th>{{ t('actions') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.full_name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{% if user.is_deleted %}{{ t('deleted') }}{% elif user.is_blocked %}{{ t('blocked') }}{% elif user.is_hidden %}{{ t('hidden') }}{% else %}{{ t('active') }}{% endif %}</td>
-                        <td class="action-row wrap">
-                            <form method="post" action="{{ url_for('admin_user_action', user_id=user.id, action='block') }}"><button class="btn btn-outline">{% if user.is_blocked %}{{ t('unblock') }}{% else %}{{ t('block') }}{% endif %}</button></form>
-                            <form method="post" action="{{ url_for('admin_user_action', user_id=user.id, action='hide') }}"><button class="btn btn-outline">{% if user.is_hidden %}{{ t('unhide') }}{% else %}{{ t('hide') }}{% endif %}</button></form>
-                            <form method="post" action="{{ url_for('admin_user_action', user_id=user.id, action='delete') }}" onsubmit="return confirm('{{ t('delete_user_confirm') }}');"><button class="btn btn-danger">{{ t('delete') }}</button></form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
+            <section class="admin-summary-grid">
+                <div class="card stat-card">
+                    <i class="fa-solid fa-users"></i>
+                    <span>{{ t('users') }}</span>
+                    <strong>{{ users|length }}</strong>
+                </div>
 
-<section class="card admin-section">
-    <h2><i class="fa-solid fa-box"></i> {{ t('listings') }}</h2>
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{ t('title') }}</th>
-                    <th>{{ t('owner') }}</th>
-                    <th>{{ t('type') }}</th>
-                    <th>{{ t('status') }}</th>
-                    <th>{{ t('actions') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for listing in listings %}
-                    <tr>
-                        <td>{{ listing.title }}</td>
-                        <td>{{ listing.seller.full_name }}</td>
-                        <td>{{ listing.status_label }}</td>
-                        <td>{% if listing.is_deleted %}{{ t('deleted') }}{% elif listing.is_hidden %}{{ t('hidden') }}{% elif listing.is_active %}{{ t('active') }}{% else %}{{ t('expired') }}{% endif %}</td>
-                        <td class="action-row wrap">
-                            <form method="post" action="{{ url_for('admin_listing_action', listing_id=listing.id, action='hide') }}"><button class="btn btn-outline">{% if listing.is_hidden %}{{ t('unhide') }}{% else %}{{ t('hide') }}{% endif %}</button></form>
-                            <form method="post" action="{{ url_for('admin_listing_action', listing_id=listing.id, action='delete') }}" onsubmit="return confirm('{{ t('delete_listing_confirm') }}');"><button class="btn btn-danger">{{ t('delete') }}</button></form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
+                <div class="card stat-card">
+                    <i class="fa-solid fa-box"></i>
+                    <span>{{ t('listings') }}</span>
+                    <strong>{{ listings|length }}</strong>
+                </div>
 
-<section class="card admin-section">
-    <h2><i class="fa-solid fa-comments"></i> {{ t('comments') }}</h2>
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{ t('listing') }}</th>
-                    <th>{{ t('author') }}</th>
-                    <th>{{ t('comment') }}</th>
-                    <th>{{ t('status') }}</th>
-                    <th>{{ t('actions') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for comment in comments %}
-                    <tr>
-                        <td>{{ comment.listing.title if comment.listing else t('listing_removed') }}</td>
-                        <td>{{ comment.author.full_name if comment.author else t('user_removed') }}</td>
-                        <td>{{ comment.content[:90] }}{% if comment.content|length > 90 %}...{% endif %}</td>
-                        <td>{% if comment.is_deleted %}{{ t('deleted') }}{% elif comment.is_hidden %}{{ t('hidden') }}{% else %}{{ t('visible') }}{% endif %}</td>
-                        <td class="action-row wrap">
-                            <form method="post" action="{{ url_for('admin_comment_action', comment_id=comment.id, action='hide') }}"><button class="btn btn-outline">{% if comment.is_hidden %}{{ t('unhide') }}{% else %}{{ t('hide') }}{% endif %}</button></form>
-                            <form method="post" action="{{ url_for('admin_comment_action', comment_id=comment.id, action='delete') }}" onsubmit="return confirm('{{ t('delete_comment_confirm') }}');"><button class="btn btn-danger">{{ t('delete') }}</button></form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
+                <div class="card stat-card">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>{{ t('comments') }}</span>
+                    <strong>{{ comments|length }}</strong>
+                </div>
+            </section>
+
+            <section class="card admin-section">
+                <h2><i class="fa-solid fa-users"></i> {{ t('users') }}</h2>
+
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>{{ t('name') }}</th>
+                                <th>{{ t('email') }}</th>
+                                <th>{{ t('status') }}</th>
+                                <th>{{ t('actions') }}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.full_name }}</td>
+                                <td>{{ user.email }}</td>
+
+                                <td>
+                                    {% if user.is_deleted %}
+                                        <span class="admin-status deleted">{{ t('deleted') }}</span>
+                                    {% elif user.is_blocked %}
+                                        <span class="admin-status blocked">{{ t('blocked') }}</span>
+                                    {% elif user.is_hidden %}
+                                        <span class="admin-status hidden">{{ t('hidden') }}</span>
+                                    {% else %}
+                                        <span class="admin-status active">{{ t('active') }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <div class="admin-actions">
+                                        <form method="post" action="{{ url_for('admin_user_action', user_id=user.id, action='block') }}">
+                                            <button class="icon-btn warning" title="{% if user.is_blocked %}{{ t('unblock') }}{% else %}{{ t('block') }}{% endif %}">
+                                                {% if user.is_blocked %}
+                                                    <i class="fa-solid fa-unlock"></i>
+                                                {% else %}
+                                                    <i class="fa-solid fa-ban"></i>
+                                                {% endif %}
+                                            </button>
+                                        </form>
+
+                                        <form method="post" action="{{ url_for('admin_user_action', user_id=user.id, action='hide') }}">
+                                            <button class="icon-btn safe" title="{% if user.is_hidden %}{{ t('unhide') }}{% else %}{{ t('hide') }}{% endif %}">
+                                                {% if user.is_hidden %}
+                                                    <i class="fa-solid fa-eye"></i>
+                                                {% else %}
+                                                    <i class="fa-solid fa-eye-slash"></i>
+                                                {% endif %}
+                                            </button>
+                                        </form>
+
+                                        <form method="post"
+                                              action="{{ url_for('admin_user_action', user_id=user.id, action='delete') }}"
+                                              onsubmit="return confirm('{{ t('delete_user_confirm') }}');">
+                                            <button class="icon-btn danger" title="{{ t('delete') }}">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card admin-section">
+                <h2><i class="fa-solid fa-box"></i> {{ t('listings') }}</h2>
+
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>{{ t('title') }}</th>
+                                <th>{{ t('owner') }}</th>
+                                <th>{{ t('type') }}</th>
+                                <th>{{ t('status') }}</th>
+                                <th>{{ t('actions') }}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for listing in listings %}
+                            <tr>
+                                <td>{{ listing.title }}</td>
+                                <td>{{ listing.seller.full_name }}</td>
+                                <td>{{ listing.status_label }}</td>
+
+                                <td>
+                                    {% if listing.is_deleted %}
+                                        <span class="admin-status deleted">{{ t('deleted') }}</span>
+                                    {% elif listing.is_hidden %}
+                                        <span class="admin-status hidden">{{ t('hidden') }}</span>
+                                    {% elif listing.is_active %}
+                                        <span class="admin-status active">{{ t('active') }}</span>
+                                    {% else %}
+                                        <span class="admin-status expired">{{ t('expired') }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <div class="admin-actions">
+                                        <form method="post" action="{{ url_for('admin_listing_action', listing_id=listing.id, action='hide') }}">
+                                            <button class="icon-btn warning" title="{% if listing.is_hidden %}{{ t('unhide') }}{% else %}{{ t('hide') }}{% endif %}">
+                                                {% if listing.is_hidden %}
+                                                    <i class="fa-solid fa-eye"></i>
+                                                {% else %}
+                                                    <i class="fa-solid fa-eye-slash"></i>
+                                                {% endif %}
+                                            </button>
+                                        </form>
+
+                                        <form method="post"
+                                              action="{{ url_for('admin_listing_action', listing_id=listing.id, action='delete') }}"
+                                              onsubmit="return confirm('{{ t('delete_listing_confirm') }}');">
+                                            <button class="icon-btn danger" title="{{ t('delete') }}">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card admin-section">
+                <h2><i class="fa-solid fa-comments"></i> {{ t('comments') }}</h2>
+
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>{{ t('listing') }}</th>
+                                <th>{{ t('author') }}</th>
+                                <th>{{ t('comment') }}</th>
+                                <th>{{ t('status') }}</th>
+                                <th>{{ t('actions') }}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for comment in comments %}
+                            <tr>
+                                <td>{{ comment.listing.title if comment.listing else t('listing_removed') }}</td>
+                                <td>{{ comment.author.full_name if comment.author else t('user_removed') }}</td>
+                                <td>{{ comment.content[:90] }}{% if comment.content|length > 90 %}...{% endif %}</td>
+
+                                <td>
+                                    {% if comment.is_deleted %}
+                                        <span class="admin-status deleted">{{ t('deleted') }}</span>
+                                    {% elif comment.is_hidden %}
+                                        <span class="admin-status hidden">{{ t('hidden') }}</span>
+                                    {% else %}
+                                        <span class="admin-status active">{{ t('visible') }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <div class="admin-actions">
+                                        <form method="post" action="{{ url_for('admin_comment_action', comment_id=comment.id, action='hide') }}">
+                                            <button class="icon-btn warning" title="{% if comment.is_hidden %}{{ t('unhide') }}{% else %}{{ t('hide') }}{% endif %}">
+                                                {% if comment.is_hidden %}
+                                                    <i class="fa-solid fa-eye"></i>
+                                                {% else %}
+                                                    <i class="fa-solid fa-eye-slash"></i>
+                                                {% endif %}
+                                            </button>
+                                        </form>
+
+                                        <form method="post"
+                                              action="{{ url_for('admin_comment_action', comment_id=comment.id, action='delete') }}"
+                                              onsubmit="return confirm('{{ t('delete_comment_confirm') }}');">
+                                            <button class="icon-btn danger" title="{{ t('delete') }}">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </section>
+
+</main>
 {% endblock %}
