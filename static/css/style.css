@@ -3,22 +3,22 @@
 ========================================================= */
 
 :root {
-    --primary: #0f5f97;
-    --primary-2: #1f78bd;
-    --secondary: #0d3f66;
-    --navy: #082a46;
-    --accent: #d4a32b;
-    --accent-light: #f1c94a;
-    --accent-dark: #b78617;
-    --soft: #eef6fb;
+    --primary: #003b7a;
+    --primary-2: #0056b8;
+    --secondary: #001f4f;
+    --navy: #001f4f;
+    --accent: #f7b718;
+    --accent-light: #ffd24a;
+    --accent-dark: #d49a00;
+    --soft: #eef4fb;
     --white: #ffffff;
     --text: #20303a;
     --muted: #667784;
     --danger: #b84b43;
     --success: #179653;
-    --border: #d8e3eb;
-    --shadow: 0 18px 42px rgba(13, 63, 102, 0.12);
-    --shadow-lg: 0 28px 70px rgba(13, 63, 102, 0.16);
+    --border: #dce5f2;
+    --shadow: 0 14px 34px rgba(0, 31, 79, 0.10);
+    --shadow-lg: 0 24px 60px rgba(0, 31, 79, 0.16);
     --radius: 24px;
 }
 
@@ -65,7 +65,7 @@ a {
 }
 
 .page-body {
-    padding: 1.3rem 0 3rem;
+    padding: 0 0 3rem;
 }
 
 .card {
@@ -191,7 +191,7 @@ html[dir="rtl"] .nav-links {
     background: rgba(255,255,255,.08);
     border: 1px solid rgba(255,255,255,.16);
     border-radius: 10px;
-    padding: .5rem .7rem;
+    padding: 8px 12px;
 }
 
 /* =========================================================
@@ -579,11 +579,10 @@ textarea { resize: vertical; }
 
 .listing-card-horizontal {
     display: grid;
-    grid-template-columns: 45% 55%;
-    align-items: stretch;
-    min-height: 260px;
+    grid-template-columns: 44% 56%;
+    min-height: 245px;
+    height: auto; /* ✅ allow growth */
 }
-
 .card-image-wrap {
     position: relative;
     background: var(--soft);
@@ -1587,7 +1586,7 @@ html[dir="rtl"] .fa-chevron-right {
 
 @media (max-width: 768px) {
     .home-page {
-        padding: 16px;
+        padding: 8px 12px;
     }
 
     .listing-grid {
@@ -1742,25 +1741,17 @@ html[dir="rtl"] .fa-chevron-right {
 .icon-btn.danger:hover {
     background: rgba(231, 76, 60, 0.12);
 }
+
+
 /* =========================================================
-   FINAL UI FIX: WIDE LAYOUT + CONSISTENT COLORS + NORMAL CARDS
+   INTEGRATED FINAL FIXES
+   - tighter navbar/hero spacing
+   - wider page layout
+   - consistent blue/yellow colors
+   - controlled listing card height
+   - horizontal admin actions
 ========================================================= */
 
-:root {
-    --primary: #003b7a;
-    --primary-2: #0056b8;
-    --secondary: #001f4f;
-    --navy: #001f4f;
-    --accent: #f7b718;
-    --accent-light: #ffd24a;
-    --accent-dark: #d49a00;
-    --border: #dce5f2;
-    --soft: #eef4fb;
-    --shadow: 0 14px 34px rgba(0, 31, 79, 0.10);
-    --shadow-lg: 0 24px 60px rgba(0, 31, 79, 0.16);
-}
-
-/* Full page should be close to edges */
 .page-body,
 .home-page {
     width: 100%;
@@ -1770,7 +1761,8 @@ html[dir="rtl"] .fa-chevron-right {
     padding-right: 22px;
 }
 
-/* Navbar closer to edges */
+.home-page { padding-top: 8px; }
+
 .nav-container,
 .site-header .container {
     width: 100%;
@@ -1779,30 +1771,26 @@ html[dir="rtl"] .fa-chevron-right {
     padding-right: 24px;
 }
 
-/* Hero wider and close to edges */
 .hero-banner,
 .hero-section {
     width: 100%;
     max-width: 100%;
-    margin: 22px auto 0;
+    margin: 0 auto;
     border-radius: 18px;
 }
 
-/* Hero height balanced */
 .banner-slider,
 .banner-slide img {
     height: 430px;
     min-height: 430px;
 }
 
-/* Search bar wide */
 .search-panel {
     width: 84%;
     max-width: 1180px;
     margin: -34px auto 34px;
 }
 
-/* Listings use full width */
 .listings-section {
     width: 100%;
     max-width: 100%;
@@ -1810,7 +1798,6 @@ html[dir="rtl"] .fa-chevron-right {
     padding: 0 6px;
 }
 
-/* Cards spread properly */
 .listing-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(240px, 1fr));
@@ -1818,15 +1805,14 @@ html[dir="rtl"] .fa-chevron-right {
     align-items: stretch;
 }
 
-/* Stop listing cards from becoming too tall */
 .listing-card-horizontal {
     display: grid;
     grid-template-columns: 44% 56%;
     min-height: 245px;
     max-height: 245px;
+    overflow: hidden;
 }
 
-/* Control image height */
 .horizontal-image-wrap {
     height: 245px;
     min-height: 245px;
@@ -1841,11 +1827,13 @@ html[dir="rtl"] .fa-chevron-right {
     object-fit: cover;
 }
 
-/* Compact card content */
 .horizontal-card-content {
     padding: 14px;
-    gap: 8px;
-    overflow: hidden;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
 }
 
 .horizontal-card-content h3 {
@@ -1855,11 +1843,17 @@ html[dir="rtl"] .fa-chevron-right {
 }
 
 .horizontal-card-content p {
-    font-size: 13px;
-    line-height: 1.45;
-    max-height: 74px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     color: #344761;
+}
+
+.card-content h3,
+.horizontal-card-content h3,
+.horizontal-card-content p {
+    word-break: break-word;
 }
 
 .listing-price {
@@ -1867,17 +1861,18 @@ html[dir="rtl"] .fa-chevron-right {
     color: var(--secondary);
 }
 
-/* Smaller View button */
 .action-pill,
 .view-btn {
+    width: fit-content;
     min-width: 92px;
     padding: 9px 14px;
     font-size: 13px;
+    flex-shrink: 0;
 }
 
-/* Consistent blue */
-.site-header,
+.view-btn { margin-top: auto; }
 
+.site-header,
 .feature-footer {
     background: linear-gradient(135deg, #001f4f, #003b7a) !important;
 }
@@ -1891,7 +1886,6 @@ html[dir="rtl"] .fa-chevron-right {
     color: #ffffff !important;
 }
 
-/* Consistent yellow */
 .btn-gold,
 .btn-yellow,
 .nav-join,
@@ -1901,21 +1895,26 @@ html[dir="rtl"] .fa-chevron-right {
     color: #10202f !important;
 }
 
-/* Text safety */
-.card-content h3,
-.horizontal-card-content h3,
-.horizontal-card-content p {
-    word-break: break-word;
+.admin-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
 }
 
-/* Tablet */
+.admin-actions form {
+    display: inline-block;
+    margin: 0;
+}
+
 @media (max-width: 1200px) {
     .listing-grid {
         grid-template-columns: repeat(2, minmax(260px, 1fr));
     }
 }
 
-/* Mobile */
 @media (max-width: 768px) {
     .page-body,
     .home-page {
@@ -1937,6 +1936,7 @@ html[dir="rtl"] .fa-chevron-right {
 
     .search-panel {
         width: 94%;
+        margin-top: -24px;
     }
 
     .listing-grid {
@@ -1944,10 +1944,28 @@ html[dir="rtl"] .fa-chevron-right {
     }
 
     .listing-card-horizontal {
-        grid-template-columns: 130px 1fr;
-        min-height: 210px;
-        max-height: 210px;
+        grid-template-columns: 120px 1fr;
+        min-height: 180px;
+        max-height: none;
+        height: auto;
     }
+
+    .horizontal-image-wrap {
+        height: 180px;
+        min-height: 180px;
+        max-height: 180px;
+    }
+
+    .horizontal-card-content { padding: 10px; }
+
+    .view-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .listing-card-horizontal { grid-template-columns: 1fr; }
 
     .horizontal-image-wrap {
         height: 210px;
