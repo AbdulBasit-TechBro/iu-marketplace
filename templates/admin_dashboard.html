@@ -4,14 +4,7 @@
 {% block content %}
 <main class="dashboard-page">
 
-    <section class="dashboard-card">
-        <div class="dashboard-card-header">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="IU Marketplace logo">
-            <span>{{ t('app_name') }}</span>
-        </div>
-
-        <div class="dashboard-card-body">
-            <section class="section-head">
+    
                 <div>
                     <h1>{{ t('admin_dashboard') }}</h1>
                     <p class="dashboard-subtitle">{{ t('manage_users_items_comments') }}</p>
