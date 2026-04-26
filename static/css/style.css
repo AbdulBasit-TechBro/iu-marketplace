@@ -1735,7 +1735,7 @@ html[dir="rtl"] .fa-chevron-right {
     background: rgba(231, 76, 60, 0.12);
 }
 /* =========================================================
-   FINAL UI FIX: CENTER CONTENT, CONSISTENT COLORS, NORMAL CARDS
+   FINAL UI FIX: WIDE LAYOUT + CONSISTENT COLORS + NORMAL CARDS
 ========================================================= */
 
 :root {
@@ -1745,49 +1745,72 @@ html[dir="rtl"] .fa-chevron-right {
     --navy: #001f4f;
     --accent: #f7b718;
     --accent-light: #ffd24a;
+    --accent-dark: #d49a00;
     --border: #dce5f2;
+    --soft: #eef4fb;
+    --shadow: 0 14px 34px rgba(0, 31, 79, 0.10);
+    --shadow-lg: 0 24px 60px rgba(0, 31, 79, 0.16);
 }
 
-/* Center all main page content */
+/* Full page should be close to edges */
 .page-body,
 .home-page {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding-left: 28px;
-    padding-right: 28px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding-left: 22px;
+    padding-right: 22px;
 }
 
-/* Hero should be wider but still centered */
+/* Navbar closer to edges */
+.nav-container,
+.site-header .container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* Hero wider and close to edges */
 .hero-banner,
 .hero-section {
-    max-width: 1120px;
-    margin: 24px auto 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 22px auto 0;
     border-radius: 18px;
 }
 
-/* Search bar centered under hero */
+/* Hero height balanced */
+.banner-slider,
+.banner-slide img {
+    height: 430px;
+    min-height: 430px;
+}
+
+/* Search bar wide */
 .search-panel {
-    max-width: 940px;
-    width: 78%;
+    width: 84%;
+    max-width: 1180px;
     margin: -34px auto 34px;
 }
 
-/* Listings section centered */
+/* Listings use full width */
 .listings-section {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 6px;
 }
 
-/* Fix listing cards width and stop stretching */
+/* Cards spread properly */
 .listing-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(240px, 1fr));
     gap: 18px;
     align-items: stretch;
 }
 
-/* Better card shape */
+/* Stop listing cards from becoming too tall */
 .listing-card-horizontal {
     display: grid;
     grid-template-columns: 44% 56%;
@@ -1795,7 +1818,7 @@ html[dir="rtl"] .fa-chevron-right {
     max-height: 245px;
 }
 
-/* IMPORTANT: image area must not enlarge */
+/* Control image height */
 .horizontal-image-wrap {
     height: 245px;
     min-height: 245px;
@@ -1803,7 +1826,6 @@ html[dir="rtl"] .fa-chevron-right {
     overflow: hidden;
 }
 
-/* Image scales down/crops nicely */
 .card-image,
 .horizontal-image-wrap .card-image {
     width: 100%;
@@ -1811,7 +1833,7 @@ html[dir="rtl"] .fa-chevron-right {
     object-fit: cover;
 }
 
-/* Keep text compact */
+/* Compact card content */
 .horizontal-card-content {
     padding: 14px;
     gap: 8px;
@@ -1821,6 +1843,7 @@ html[dir="rtl"] .fa-chevron-right {
 .horizontal-card-content h3 {
     font-size: 15px;
     line-height: 1.25;
+    color: var(--secondary);
 }
 
 .horizontal-card-content p {
@@ -1828,13 +1851,15 @@ html[dir="rtl"] .fa-chevron-right {
     line-height: 1.45;
     max-height: 74px;
     overflow: hidden;
+    color: #344761;
 }
 
 .listing-price {
     font-size: 15px;
+    color: var(--secondary);
 }
 
-/* Make View Item button smaller and clean */
+/* Smaller View button */
 .action-pill,
 .view-btn {
     min-width: 92px;
@@ -1842,21 +1867,20 @@ html[dir="rtl"] .fa-chevron-right {
     font-size: 13px;
 }
 
-/* Consistent blue buttons */
+/* Consistent blue */
+.site-header,
+.dashboard-card-header,
+.feature-footer {
+    background: linear-gradient(135deg, #001f4f, #003b7a) !important;
+}
+
 .btn-primary,
 .search-btn,
 .action-pill,
 .view-btn,
 .badge-buy {
     background: linear-gradient(135deg, #003b7a, #0056b8) !important;
-    color: white !important;
-}
-
-/* Consistent navbar blue */
-.site-header,
-.dashboard-card-header,
-.feature-footer {
-    background: linear-gradient(135deg, #001f4f, #003b7a) !important;
+    color: #ffffff !important;
 }
 
 /* Consistent yellow */
@@ -1869,7 +1893,7 @@ html[dir="rtl"] .fa-chevron-right {
     color: #10202f !important;
 }
 
-/* Prevent very long titles/descriptions from destroying layout */
+/* Text safety */
 .card-content h3,
 .horizontal-card-content h3,
 .horizontal-card-content p {
@@ -1879,7 +1903,7 @@ html[dir="rtl"] .fa-chevron-right {
 /* Tablet */
 @media (max-width: 1200px) {
     .listing-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
     }
 }
 
@@ -1887,6 +1911,12 @@ html[dir="rtl"] .fa-chevron-right {
 @media (max-width: 768px) {
     .page-body,
     .home-page {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .nav-container,
+    .site-header .container {
         padding-left: 16px;
         padding-right: 16px;
     }
@@ -1898,7 +1928,7 @@ html[dir="rtl"] .fa-chevron-right {
     }
 
     .search-panel {
-        width: 92%;
+        width: 94%;
     }
 
     .listing-grid {
