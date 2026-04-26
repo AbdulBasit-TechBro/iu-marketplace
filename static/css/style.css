@@ -1229,6 +1229,20 @@ th {
     background: #f8fbfc;
 }
 
+.admin-actions {
+    display: flex;
+    flex-direction: row;   /* IMPORTANT */
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Make sure buttons don’t stretch */
+.admin-actions form {
+    display: inline-block;
+    margin: 0;
+}
+
 /* =========================================================
    AUTH
 ========================================================= */
@@ -1675,19 +1689,13 @@ html[dir="rtl"] .fa-chevron-right {
 /* ICON BUTTONS */
 
 .icon-btn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #f4f7fb;
-    border: 1px solid #e0e8f2;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    font-size: 15px;
 }
-
 /* hover animation */
 .icon-btn:hover {
     transform: translateY(-2px);
@@ -1869,7 +1877,7 @@ html[dir="rtl"] .fa-chevron-right {
 
 /* Consistent blue */
 .site-header,
-.dashboard-card-header,
+
 .feature-footer {
     background: linear-gradient(135deg, #001f4f, #003b7a) !important;
 }
