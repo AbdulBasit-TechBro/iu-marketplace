@@ -1809,15 +1809,23 @@ html[dir="rtl"] .fa-chevron-right {
     display: grid;
     grid-template-columns: 44% 56%;
     min-height: 245px;
-    max-height: 245px;
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
 }
 
 .horizontal-image-wrap {
-    height: 245px;
+    height: auto;
     min-height: 245px;
-    max-height: 245px;
     overflow: hidden;
+}
+
+.horizontal-card-content {
+    min-height: 245px;
+}
+
+.view-btn {
+    margin-top: auto;
+    flex-shrink: 0;
 }
 
 .card-image,
