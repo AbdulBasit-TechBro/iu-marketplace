@@ -1734,3 +1734,186 @@ html[dir="rtl"] .fa-chevron-right {
 .icon-btn.danger:hover {
     background: rgba(231, 76, 60, 0.12);
 }
+/* =========================================================
+   FINAL UI FIX: CENTER CONTENT, CONSISTENT COLORS, NORMAL CARDS
+========================================================= */
+
+:root {
+    --primary: #003b7a;
+    --primary-2: #0056b8;
+    --secondary: #001f4f;
+    --navy: #001f4f;
+    --accent: #f7b718;
+    --accent-light: #ffd24a;
+    --border: #dce5f2;
+}
+
+/* Center all main page content */
+.page-body,
+.home-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 28px;
+    padding-right: 28px;
+}
+
+/* Hero should be wider but still centered */
+.hero-banner,
+.hero-section {
+    max-width: 1120px;
+    margin: 24px auto 0;
+    border-radius: 18px;
+}
+
+/* Search bar centered under hero */
+.search-panel {
+    max-width: 940px;
+    width: 78%;
+    margin: -34px auto 34px;
+}
+
+/* Listings section centered */
+.listings-section {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Fix listing cards width and stop stretching */
+.listing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+}
+
+/* Better card shape */
+.listing-card-horizontal {
+    display: grid;
+    grid-template-columns: 44% 56%;
+    min-height: 245px;
+    max-height: 245px;
+}
+
+/* IMPORTANT: image area must not enlarge */
+.horizontal-image-wrap {
+    height: 245px;
+    min-height: 245px;
+    max-height: 245px;
+    overflow: hidden;
+}
+
+/* Image scales down/crops nicely */
+.card-image,
+.horizontal-image-wrap .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Keep text compact */
+.horizontal-card-content {
+    padding: 14px;
+    gap: 8px;
+    overflow: hidden;
+}
+
+.horizontal-card-content h3 {
+    font-size: 15px;
+    line-height: 1.25;
+}
+
+.horizontal-card-content p {
+    font-size: 13px;
+    line-height: 1.45;
+    max-height: 74px;
+    overflow: hidden;
+}
+
+.listing-price {
+    font-size: 15px;
+}
+
+/* Make View Item button smaller and clean */
+.action-pill,
+.view-btn {
+    min-width: 92px;
+    padding: 9px 14px;
+    font-size: 13px;
+}
+
+/* Consistent blue buttons */
+.btn-primary,
+.search-btn,
+.action-pill,
+.view-btn,
+.badge-buy {
+    background: linear-gradient(135deg, #003b7a, #0056b8) !important;
+    color: white !important;
+}
+
+/* Consistent navbar blue */
+.site-header,
+.dashboard-card-header,
+.feature-footer {
+    background: linear-gradient(135deg, #001f4f, #003b7a) !important;
+}
+
+/* Consistent yellow */
+.btn-gold,
+.btn-yellow,
+.nav-join,
+.join-now-footer,
+.badge-gift {
+    background: linear-gradient(135deg, #f7b718, #ffd24a) !important;
+    color: #10202f !important;
+}
+
+/* Prevent very long titles/descriptions from destroying layout */
+.card-content h3,
+.horizontal-card-content h3,
+.horizontal-card-content p {
+    word-break: break-word;
+}
+
+/* Tablet */
+@media (max-width: 1200px) {
+    .listing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .page-body,
+    .home-page {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .hero-banner,
+    .hero-section,
+    .listings-section {
+        max-width: 100%;
+    }
+
+    .search-panel {
+        width: 92%;
+    }
+
+    .listing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .listing-card-horizontal {
+        grid-template-columns: 130px 1fr;
+        min-height: 210px;
+        max-height: 210px;
+    }
+
+    .horizontal-image-wrap {
+        height: 210px;
+        min-height: 210px;
+        max-height: 210px;
+    }
+}
